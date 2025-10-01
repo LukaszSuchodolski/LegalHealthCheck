@@ -1,0 +1,27 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from app.config import settings
+
+app = FastAPI(title=f"{settings.app_name} API", version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Prosty ping
+@app.get("/api/health")
+def health_check():
+    return {"status": "ok", "app": settings.app_name}
+
+# --- importy routerów (dodamy za chwilę) ---
+from app.api.v1.endpoints.audit import router as audit_router
+from app.api.v1.endpoints.documents import router as documents_router
+from app.api.v1.endpoints.alerts import router as alerts_router
+
+app.include_router(audit_router, prefix="/api/v1")
+app.include_router(documents_router, prefix="/api/v1")
+app.include_router(alerts_router, prefix="/api/v1")
