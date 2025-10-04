@@ -1,23 +1,55 @@
+// src/App.jsx
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./auth/AuthContext";
+import ProtectedRoute from "./auth/ProtectedRoute";
+import PublicOnlyRoute from "./auth/PublicOnlyRoute";
 
-import React from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import NavBar from "./components/NavBar";
+
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Alerts from "./pages/Alerts";
+import Checkup from "./pages/Checkup";
+import Documents from "./pages/Documents";
 
 export default function App() {
   return (
-    <div style={{ fontFamily: 'Inter, system-ui, Arial', padding: 24 }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 style={{ margin: 0 }}>LegalHealth Check</h1>
-        <nav style={{ display: 'flex', gap: 12 }}>
-          <Link to="/">Dashboard</Link>
-          <Link to="/checkup">Check-up</Link>
-          <Link to="/documents">Dokumenty</Link>
-          <Link to="/alerts">Alerty</Link>
-        </nav>
-      </header>
-      <main style={{ marginTop: 24 }}>
-        <Outlet />
-      </main>
-      <footer style={{ marginTop: 48, fontSize: 12, color: '#666' }}>© {new Date().getFullYear()} LegalHealth</footer>
-    </div>
-  )
+    <AuthProvider>
+      <BrowserRouter>
+        <NavBar />
+        <Routes>
+          {/* Publiczne, ale tylko dla niezalogowanych */}
+          <Route element={<PublicOnlyRoute />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Route>
+
+          {/* Chronione — tylko dla zalogowanych */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/alerts" element={<Alerts />} />
+            <Route path="/checkup" element={<Checkup />} />
+	    <Route path="/documents" element={<Documents />} />
+          </Route>
+
+          {/* Strona główna: przekierowanie zależne od stanu */}
+          <Route path="/" element={<HomeRedirect />} />
+
+          {/* Fallback 404 -> na "/" (a stamtąd HomeRedirect zrobi resztę) */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
+}
+
+function HomeRedirect() {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? (
+    <Navigate to="/dashboard" replace />
+  ) : (
+    <Navigate to="/login" replace />
+  );
 }
