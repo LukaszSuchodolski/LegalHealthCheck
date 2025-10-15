@@ -92,8 +92,8 @@ _security = HTTPBearer(auto_error=False)
 
 
 def get_current_user(
-    creds: HTTPAuthorizationCredentials = Depends(_security),
-):  # noqa: B008
+    creds: Annotated[HTTPAuthorizationCredentials | None, Depends(_security)],
+):
     if not creds:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
