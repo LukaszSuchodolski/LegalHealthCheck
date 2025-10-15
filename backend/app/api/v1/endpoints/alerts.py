@@ -42,7 +42,10 @@ def list_alerts() -> list[Alert]:
         Alert(
             id="rodo-dpa-review",
             title="RODO – przegląd umów powierzenia",
-            message=("Zalecany kwartalny przegląd umów powierzenia z dostawcami " "(hosting, mailing, analityka)."),
+            message=(
+                "Zalecany kwartalny przegląd umów powierzenia z dostawcami "
+                "(hosting, mailing, analityka)."
+            ),
             severity="info",
             created_at=now,
         ),

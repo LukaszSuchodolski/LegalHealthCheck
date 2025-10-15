@@ -12,3 +12,6 @@ extend-select = ["E", "F", "B"]
 
 # Tymczasowo wyciszone (zostaną przywrócone po refaktorze plików)
 
+[tool.isort]
+profile = "black"
+line_length = 88

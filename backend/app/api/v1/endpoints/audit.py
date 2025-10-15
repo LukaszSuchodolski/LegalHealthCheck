@@ -1,11 +1,12 @@
-from pydantic import BaseModel
-from app.models import AuditAnswer, AuditResult, HealthScore, RiskItem
 import json
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+
+from app.models import AuditAnswer, AuditResult, HealthScore, RiskItem
 
 # NAJPIERW router:
 router = APIRouter(tags=["audit"], prefix="/audit")
@@ -22,13 +23,15 @@ DOCS_PATH = APP_DIR / "schemas" / "documents.json"
 def get_checkup_schema_via_audit():
     try:
         if not SCHEMA_PATH.exists():
-            raise HTTPException(status_code=404, detail=f"Nie znaleziono pliku: {SCHEMA_PATH}") from None
+            raise HTTPException(
+                status_code=404, detail=f"Nie znaleziono pliku: {SCHEMA_PATH}"
+            ) from None
         return json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     except json.JSONDecodeError as e:
         raise HTTPException(
-        status_code=500,
-        detail=f"Błąd JSON w {SCHEMA_PATH}: {e.msg} (linia {e.lineno}, kol {e.colno})",
-    ) from None
+            status_code=500,
+            detail=f"Błąd JSON w {SCHEMA_PATH}: {e.msg} (linia {e.lineno}, kol {e.colno})",
+        ) from None
 
 
 # ---------- ISTNIEJĄCE ENDPOINTY (bez zmian) ----------
@@ -41,7 +44,9 @@ def get_health_score() -> HealthScore:
 def run_checkup(answers: list[AuditAnswer]) -> AuditResult:
     high_risk = any(
         a.question_id == "has_employees" and a.value.lower() == "yes" for a in answers
-    ) and any(a.question_id == "bhp_training" and a.value.lower() == "no" for a in answers)
+    ) and any(
+        a.question_id == "bhp_training" and a.value.lower() == "no" for a in answers
+    )
     risks = []
     if high_risk:
         risks.append(
@@ -59,7 +64,9 @@ def run_checkup(answers: list[AuditAnswer]) -> AuditResult:
     score = 85 - (20 if high_risk else 0)
     return AuditResult(
         score=HealthScore(
-            score=score, level="medium" if score < 80 else "low", updated_at=datetime.utcnow()
+            score=score,
+            level="medium" if score < 80 else "low",
+            updated_at=datetime.utcnow(),
         ),
         risks=risks,
     )
@@ -157,8 +164,3 @@ def run_checkup_v2(answers: list[Answer]) -> CheckupResult:
         recommendations=recommendations,
         missing_documents=missing_documents,
     )
-
-
-
-
-

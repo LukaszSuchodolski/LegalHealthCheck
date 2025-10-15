@@ -5,7 +5,7 @@
       "id": "regulamin_sklepu",
       "name_pl": "Regulamin świadczenia usług/sprzedaży",
       "area": "core",
-      "required_when": { "==": [ { "var": "has_regulamin" }, false ] },
+      "required_when": { "==": [{ "var": "has_regulamin" }, false] },
       "legal_basis": [
         "Ustawa o prawach konsumenta art. 12 i nast.",
         "KC art. 384–385(3)"
@@ -17,11 +17,11 @@
       "area": "rodo",
       "required_when": {
         "and": [
-          { "==": [ { "var": "processes_personal_data" }, true ] },
-          { "==": [ { "var": "has_privacy_policy" }, false ] }
+          { "==": [{ "var": "processes_personal_data" }, true] },
+          { "==": [{ "var": "has_privacy_policy" }, false] }
         ]
       },
-      "legal_basis": [ "RODO art. 13–14", "UODO (PL) art. 24 i nast." ]
+      "legal_basis": ["RODO art. 13–14", "UODO (PL) art. 24 i nast."]
     },
     {
       "id": "umowy_powierzenia",
@@ -29,25 +29,27 @@
       "area": "rodo",
       "required_when": {
         "and": [
-          { "==": [ { "var": "processes_personal_data" }, true ] },
-          { "==": [ { "var": "has_dpa" }, false ] }
+          { "==": [{ "var": "processes_personal_data" }, true] },
+          { "==": [{ "var": "has_dpa" }, false] }
         ]
       },
-      "legal_basis": [ "RODO art. 28" ]
+      "legal_basis": ["RODO art. 28"]
     },
     {
       "id": "procedura_e_faktur",
       "name_pl": "Procedura wystawiania e-faktur",
       "area": "finanse",
-      "required_when": { "==": [ { "var": "issues_einvoices" }, true ] },
-      "legal_basis": [ "Ustawa o VAT, rozporządzenia wykonawcze (KSeF / e-faktura)" ]
+      "required_when": { "==": [{ "var": "issues_einvoices" }, true] },
+      "legal_basis": [
+        "Ustawa o VAT, rozporządzenia wykonawcze (KSeF / e-faktura)"
+      ]
     },
     {
       "id": "rejestr_umow",
       "name_pl": "Rejestr umów",
       "area": "core",
-      "required_when": { "==": [ { "var": "has_contract_register" }, false ] },
-      "legal_basis": [ "Dobre praktyki compliance / kontroling" ]
+      "required_when": { "==": [{ "var": "has_contract_register" }, false] },
+      "legal_basis": ["Dobre praktyki compliance / kontroling"]
     },
     {
       "id": "bhp_szkolenia_do_nadrobienia",
@@ -55,11 +57,14 @@
       "area": "bhp",
       "required_when": {
         "and": [
-          { "==": [ { "var": "has_employees" }, true ] },
-          { "==": [ { "var": "bhp_training" }, false ] }
+          { "==": [{ "var": "has_employees" }, true] },
+          { "==": [{ "var": "bhp_training" }, false] }
         ]
       },
-      "legal_basis": [ "KP art. 237^3 i nast.", "Rozp. w sprawie szkolenia w dziedzinie BHP" ]
+      "legal_basis": [
+        "KP art. 237^3 i nast.",
+        "Rozp. w sprawie szkolenia w dziedzinie BHP"
+      ]
     },
     {
       "id": "bhp_dowody_szkolen",
@@ -67,12 +72,12 @@
       "area": "bhp",
       "required_when": {
         "and": [
-          { "==": [ { "var": "has_employees" }, true ] },
-          { "==": [ { "var": "bhp_training" }, true ] },
-          { "==": [ { "var": "bhp_training_proofs" }, false ] }
+          { "==": [{ "var": "has_employees" }, true] },
+          { "==": [{ "var": "bhp_training" }, true] },
+          { "==": [{ "var": "bhp_training_proofs" }, false] }
         ]
       },
-      "legal_basis": [ "KP art. 237^3 i nast.", "Dokumentacja pracownicza" ]
+      "legal_basis": ["KP art. 237^3 i nast.", "Dokumentacja pracownicza"]
     }
   ]
 }
