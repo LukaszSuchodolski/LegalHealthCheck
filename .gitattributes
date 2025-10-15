@@ -1,14 +1,20 @@
-* text=auto
+# utwórz plik .gitattributes (jeśli go nie masz)
+@"
+* text=auto eol=lf
 
-# Windows-friendly (CRLF) dla plików wsadowych/powershell
-*.ps1 eol=crlf
-*.cmd eol=crlf
-*.bat eol=crlf
+# Windowsowe skrypty zostają w CRLF
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
 
-# Unix (LF) dla kodu
-*.py  eol=lf
-*.js  eol=lf
-*.jsx eol=lf
-*.ts  eol=lf
-*.tsx eol=lf
-*.sh  eol=lf
+# Binaria
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary
+*.zip binary
+*.rar binary
+"@ | Set-Content -Encoding UTF8 .gitattributes
+
+git add .gitattributes
+git commit -m "chore: enforce LF endings via .gitattributes"
