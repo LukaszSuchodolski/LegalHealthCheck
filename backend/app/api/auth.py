@@ -1,6 +1,6 @@
 import os
 from datetime import UTC, datetime, timedelta
-from typing import Optional
+from typing import Annotated, Optional
 
 import bcrypt
 from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
