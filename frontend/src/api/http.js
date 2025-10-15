@@ -1,22 +1,27 @@
-const API_BASE = import.meta.env.VITE_API_BASE ?? "http://127.0.0.1:8000";
+const BASE = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
 
-function authHeaders() {
-  const t = localStorage.getItem("lhc_token");
-  return t ? { Authorization: `Bearer ${t}` } : {};
-}
+export async function request(path, { method = "GET", body, token } = {}) {
+  const headers = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
 
-export async function http(path, { method = "GET", headers = {}, body } = {}) {
-  const res = await fetch(`${API_BASE}${path}`, {
+  const res = await fetch(`${BASE}${path}`, {
     method,
-    headers: { ...headers, ...authHeaders() },
-    body,
+    headers,
+    body: body ? JSON.stringify(body) : undefined,
+    credentials: "include",
   });
-  // gdy JSON
-  const ct = res.headers.get("content-type") || "";
-  const maybeJson = ct.includes("application/json");
+
   if (!res.ok) {
-    const errText = maybeJson ? JSON.stringify(await res.json()).slice(0, 200) : await res.text();
-    throw new Error(`${res.status} ${res.statusText} ${errText}`);
+    let text = "";
+    try {
+      text = await res.text();
+    } catch {}
+    throw new Error(`HTTP ${res.status}: ${text}`);
   }
-  return maybeJson ? res.json() : res;
+
+  try {
+    return await res.json();
+  } catch {
+    return null;
+  }
 }
