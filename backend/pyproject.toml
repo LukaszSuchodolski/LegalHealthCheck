@@ -1,0 +1,14 @@
+[tool.ruff]
+line-length = 120
+fix = true
+
+# Wykluczenia (ścieżki POSIX)
+extend-exclude = [
+  ""
+]
+
+[tool.ruff.lint]
+extend-select = ["E", "F", "B"]
+
+# Tymczasowo wyciszone (zostaną przywrócone po refaktorze plików)
+

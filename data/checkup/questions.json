@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "questions": [
+    {"id": "has_employees", "text": "Czy firma zatrudnia pracowników?", "type": "boolean", "weight": 2},
+    {"id": "bhp_training", "text": "Czy pracownicy mają aktualne szkolenia BHP?", "type": "boolean", "weight": 3},
+    {"id": "rodo_policy", "text": "Czy firma posiada politykę RODO?", "type": "boolean", "weight": 3}
+  ]
+}

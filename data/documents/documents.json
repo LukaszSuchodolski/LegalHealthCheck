@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "items": [
+    {"id": "regulamin_pracy", "title": "Regulamin pracy", "required": true},
+    {"id": "polityka_rodo", "title": "Polityka ochrony danych (RODO)", "required": true},
+    {"id": "rejestr_czynnosci", "title": "Rejestr czynności przetwarzania", "required": false}
+  ]
+}

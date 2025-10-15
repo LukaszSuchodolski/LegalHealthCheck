@@ -1,0 +1,11 @@
+REGULAMIN SKLEPU – {{company_name}}
+
+Właściciel: {{company_name}}
+Adres: {{company_address}}
+Data: {{date}}
+
+Postanowienia ogólne:
+1. Sklep działa pod firmą {{company_name}}.
+2. Kontakt: {{contact_email}}.
+
+[Wersja testowa szablonu]

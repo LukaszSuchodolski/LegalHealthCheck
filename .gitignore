@@ -1,0 +1,36 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ruff_cache/
+
+# Node / frontend
+node_modules/
+dist/
+build/
+*.log
+
+# Tooling
+coverage/
+.nyc_output/
+.cache/
+*.coverage
+
+# App data (lokalne uploady, generaty)
+data/uploads/
+data/generations.json
+
+# IDE/Editor
+.vscode/
+*.code-workspace
+
+# Env
+.env
+.env.local

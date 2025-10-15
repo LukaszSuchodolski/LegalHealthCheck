@@ -1,0 +1,8 @@
+{
+  "answers": {
+    "company_name": "Acme",
+    "has_privacy_policy": true,
+    "employees": 12
+  },
+  "meta": { "source": "ui", "version": "mvp" }
+}

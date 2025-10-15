@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "users": [
+    { "id": "u1", "email": "demo@lhc.local", "password_hash": "$2b$12$K90j388nocTQLvKCthOhQ.1zrjYBsRe5s.RVIs3jVaXANxCJAjlG.", "role": "admin" }
+  ]
+}

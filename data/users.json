@@ -1,0 +1,8 @@
+{
+  "demo@lhc.local": {
+    "id": "u-demo",
+    "email": "demo@lhc.local",
+    "password_hash": "$2b$12$EO7Wuu5hLqdkyHvC9cpNGuylTfRNOgDqG1FNPC/ZxEXt31K05mLbS",
+    "role": "user"
+  }
+}

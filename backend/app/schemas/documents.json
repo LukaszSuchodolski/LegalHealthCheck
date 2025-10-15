@@ -1,0 +1,78 @@
+{
+  "version": "0.1.0",
+  "documents": [
+    {
+      "id": "regulamin_sklepu",
+      "name_pl": "Regulamin świadczenia usług/sprzedaży",
+      "area": "core",
+      "required_when": { "==": [ { "var": "has_regulamin" }, false ] },
+      "legal_basis": [
+        "Ustawa o prawach konsumenta art. 12 i nast.",
+        "KC art. 384–385(3)"
+      ]
+    },
+    {
+      "id": "polityka_prywatnosci",
+      "name_pl": "Polityka prywatności (RODO)",
+      "area": "rodo",
+      "required_when": {
+        "and": [
+          { "==": [ { "var": "processes_personal_data" }, true ] },
+          { "==": [ { "var": "has_privacy_policy" }, false ] }
+        ]
+      },
+      "legal_basis": [ "RODO art. 13–14", "UODO (PL) art. 24 i nast." ]
+    },
+    {
+      "id": "umowy_powierzenia",
+      "name_pl": "Umowy powierzenia (DPA) z podmiotami przetwarzającymi",
+      "area": "rodo",
+      "required_when": {
+        "and": [
+          { "==": [ { "var": "processes_personal_data" }, true ] },
+          { "==": [ { "var": "has_dpa" }, false ] }
+        ]
+      },
+      "legal_basis": [ "RODO art. 28" ]
+    },
+    {
+      "id": "procedura_e_faktur",
+      "name_pl": "Procedura wystawiania e-faktur",
+      "area": "finanse",
+      "required_when": { "==": [ { "var": "issues_einvoices" }, true ] },
+      "legal_basis": [ "Ustawa o VAT, rozporządzenia wykonawcze (KSeF / e-faktura)" ]
+    },
+    {
+      "id": "rejestr_umow",
+      "name_pl": "Rejestr umów",
+      "area": "core",
+      "required_when": { "==": [ { "var": "has_contract_register" }, false ] },
+      "legal_basis": [ "Dobre praktyki compliance / kontroling" ]
+    },
+    {
+      "id": "bhp_szkolenia_do_nadrobienia",
+      "name_pl": "Plan i potwierdzenia szkoleń BHP (do uzupełnienia)",
+      "area": "bhp",
+      "required_when": {
+        "and": [
+          { "==": [ { "var": "has_employees" }, true ] },
+          { "==": [ { "var": "bhp_training" }, false ] }
+        ]
+      },
+      "legal_basis": [ "KP art. 237^3 i nast.", "Rozp. w sprawie szkolenia w dziedzinie BHP" ]
+    },
+    {
+      "id": "bhp_dowody_szkolen",
+      "name_pl": "Dowody odbytych szkoleń BHP i badań (karty, zaświadczenia, orzeczenia)",
+      "area": "bhp",
+      "required_when": {
+        "and": [
+          { "==": [ { "var": "has_employees" }, true ] },
+          { "==": [ { "var": "bhp_training" }, true ] },
+          { "==": [ { "var": "bhp_training_proofs" }, false ] }
+        ]
+      },
+      "legal_basis": [ "KP art. 237^3 i nast.", "Dokumentacja pracownicza" ]
+    }
+  ]
+}

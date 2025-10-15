@@ -1,0 +1,43 @@
+name: CI (ruff + eslint)
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+
+jobs:
+  backend-ruff:
+    name: Ruff (backend)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Ruff
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff
+      - name: Ruff check
+        run: ruff check .
+
+  frontend-eslint:
+    name: ESLint (frontend)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "frontend/package-lock.json"
+      - name: Install deps
+        run: npm ci || npm i --no-audit --no-fund
+      - name: ESLint
+        run: npx eslint "src/**/*.{js,jsx,ts,tsx}" --config .eslintrc.cjs --max-warnings=0

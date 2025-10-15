@@ -1,0 +1,23 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: [--fix]
+        types_or: [python]
+      - id: ruff-format
+        types_or: [python]
+
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v9.9.0
+    hooks:
+      - id: eslint
+        name: eslint (frontend)
+        files: ^frontend/src/.*\.(js|jsx|ts|tsx)$
+        args: ["--max-warnings=0"]
+        additional_dependencies:
+          - eslint@8.57.0
+          - eslint-plugin-react@7.34.1
+          - eslint-plugin-react-hooks@4.6.2
+          - eslint-plugin-import@2.29.1
+          - eslint-import-resolver-alias@1.1.2
