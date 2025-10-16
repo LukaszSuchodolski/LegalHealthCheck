@@ -1,5 +1,4 @@
-# utwórz plik .gitattributes (jeśli go nie masz)
-@"
+
 * text=auto eol=lf
 
 # Windowsowe skrypty zostają w CRLF
@@ -14,7 +13,7 @@
 *.pdf binary
 *.zip binary
 *.rar binary
-"@ | Set-Content -Encoding UTF8 .gitattributes
+
 
 git add .gitattributes
 git commit -m "chore: enforce LF endings via .gitattributes"
