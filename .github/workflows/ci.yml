@@ -28,7 +28,7 @@ jobs:
           python -m pip install -U pip
           pip install pre-commit
           pip install -e .[dev] || pip install -e .
-          pip install pytest httpx fastapi "uvicorn[standard]"
+          pip install pytest httpx fastapi "uvicorn[standard]" bcrypt
 
       - name: Run pre-commit (ruff, black, isort, prettier)
         run: pre-commit run --all-files
