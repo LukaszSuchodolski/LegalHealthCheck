@@ -1,46 +1,44 @@
-[project]
-name = "legalhealthcheck-backend"
-version = "0.1.0"
-description = "LegalHealthCheck backend – FastAPI + audit/checkup API"
-requires-python = ">=3.10"
-dependencies = [
-    "fastapi>=0.110",
-    "uvicorn[standard]>=0.30",
-    "python-jose[cryptography]>=3.3",
-    "passlib[bcrypt]>=1.7",
-    "bcrypt>=4.1",
-    "httpx>=0.27",
-    "pydantic>=2.6",
-    "python-multipart>=0.0.9",
-]
-
-[project.optional-dependencies]
-dev = [
-    "pytest",
-    "pre-commit",
-    "ruff",
-    "black",
-    "isort",
-]
-
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[tool.ruff]
-line-length = 120
-fix = true
-
-# Wykluczenia (ścieżki POSIX)
-extend-exclude = [
-  ""
-]
-
-[tool.ruff.lint]
-extend-select = ["E", "F", "B"]
-
-# Tymczasowo wyciszone (zostaną przywrócone po refaktorze plików)
-
-[tool.isort]
-profile = "black"
-line_length = 88
+module.exports = {
+  root: true,
+  env: {
+    browser: true,
+    es2021: true,
+    node: true,
+  },
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+  ],
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+    'import/resolver': {
+      alias: {
+        map: [
+          ['@api', './src/api'],
+          ['@components', './src/components'],
+          ['@hooks', './src/hooks'],
+          ['@pages', './src/pages'],
+          ['@utils', './src/utils'],
+        ],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
+    },
+  },
+  plugins: ['react', 'import'],
+  rules: {
+    // Twoje reguły ESLint
+    'react/prop-types': 'off',
+    'react/react-in-jsx-scope': 'off',
+    'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'import/no-unresolved': 'error',
+    'import/default': 'error',
+    'no-empty': 'warn',
+  },
+};
