@@ -30,3 +30,23 @@ dev = [
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+
+# --- formatting & lint config (added) ---
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+known_first_party = ["app"]
+combine_as_imports = true
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+# LINT only: bez 'I' (isort) -> unikamy dublowania z isort hookiem
+select = ["E","F","UP","B"]

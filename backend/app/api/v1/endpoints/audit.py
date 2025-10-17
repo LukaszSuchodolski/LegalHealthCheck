@@ -44,9 +44,7 @@ def get_health_score() -> HealthScore:
 def run_checkup(answers: list[AuditAnswer]) -> AuditResult:
     high_risk = any(
         a.question_id == "has_employees" and a.value.lower() == "yes" for a in answers
-    ) and any(
-        a.question_id == "bhp_training" and a.value.lower() == "no" for a in answers
-    )
+    ) and any(a.question_id == "bhp_training" and a.value.lower() == "no" for a in answers)
     risks = []
     if high_risk:
         risks.append(

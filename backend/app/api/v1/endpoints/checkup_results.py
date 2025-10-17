@@ -45,13 +45,9 @@ class CheckupResult(BaseModel):
 
 
 @router.post("/results", status_code=201)
-def save_checkup_results(
-    payload: CheckupResult, user: dict = Depends(_current_user_optional)
-):
+def save_checkup_results(payload: CheckupResult, user: dict = Depends(_current_user_optional)):
     if not isinstance(payload.answers, dict) or not payload.answers:
-        raise HTTPException(
-            status_code=400, detail="answers must be a non-empty object"
-        )
+        raise HTTPException(status_code=400, detail="answers must be a non-empty object")
     uid = str((user or {}).get("sub", "anonymous"))
     ts = datetime.now(tz=timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     record = {
@@ -80,9 +76,7 @@ def list_checkup_results(user: dict = Depends(_current_user_optional)):
             {
                 "filename": p.name,
                 "size": st.st_size,
-                "modified": datetime.fromtimestamp(
-                    st.st_mtime, tz=timezone.utc
-                ).isoformat(),
+                "modified": datetime.fromtimestamp(st.st_mtime, tz=timezone.utc).isoformat(),
             }
         )
     return out

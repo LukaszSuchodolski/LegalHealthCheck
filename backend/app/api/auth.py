@@ -1,6 +1,6 @@
 import os
 from datetime import UTC, datetime, timedelta
-from typing import Annotated, Optional
+from typing import Annotated
 
 import bcrypt
 from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
@@ -45,7 +45,7 @@ def _make_jwt(uid: str, role: str) -> str:
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALG)
 
 
-def _decode_from_header(authorization: Optional[str]) -> dict | None:
+def _decode_from_header(authorization: str | None) -> dict | None:
     if not authorization or not authorization.startswith("Bearer "):
         return None
     token = authorization.split(" ", 1)[1].strip()
@@ -65,9 +65,7 @@ async def login(payload: LoginRequest, request: Request):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     phash = user.get("password_hash")
-    if not phash or not bcrypt.checkpw(
-        payload.password.encode("utf-8"), phash.encode("utf-8")
-    ):
+    if not phash or not bcrypt.checkpw(payload.password.encode("utf-8"), phash.encode("utf-8")):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     uid = user.get("id") or payload.email
@@ -82,9 +80,7 @@ def me(authorization: str | None = Header(default=None)):
     payload = _decode_from_header(authorization)
     if not payload:
         raise HTTPException(status_code=401, detail="Not authenticated")
-    return MeResponse(
-        sub=payload.get("sub", "unknown"), role=payload.get("role", "user")
-    )
+    return MeResponse(sub=payload.get("sub", "unknown"), role=payload.get("role", "user"))
 
 
 # --- Dependency do ochrony endpointów ---
@@ -95,9 +91,7 @@ def get_current_user(
     creds: Annotated[HTTPAuthorizationCredentials | None, Depends(_security)],
 ):
     if not creds:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
-        )
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     token = creds.credentials
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALG])

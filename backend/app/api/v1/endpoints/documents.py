@@ -1,7 +1,6 @@
 # ruff: noqa: B008
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse
@@ -33,7 +32,7 @@ TEMPLATES_DIR = DATA_PATH / "templates"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
 
-MOCK_DOCS: List[DocumentTemplate] = [
+MOCK_DOCS: list[DocumentTemplate] = [
     DocumentTemplate(
         id="regulamin_sklepu",
         title="Regulamin sklepu internetowego",
@@ -55,8 +54,8 @@ MOCK_DOCS: List[DocumentTemplate] = [
 ]
 
 
-@router.get("/documents/templates", response_model=List[DocumentTemplate])
-def list_document_templates() -> List[DocumentTemplate]:
+@router.get("/documents/templates", response_model=list[DocumentTemplate])
+def list_document_templates() -> list[DocumentTemplate]:
     return MOCK_DOCS
 
 
@@ -142,9 +141,7 @@ async def upload_document(
             while chunk := await file.read(1024 * 1024):
                 f.write(chunk)
     except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Nie udało się zapisać pliku: {e}"
-        ) from None
+        raise HTTPException(status_code=500, detail=f"Nie udało się zapisać pliku: {e}") from None
 
     size = dest.stat().st_size
     return UploadedFile(
@@ -155,9 +152,9 @@ async def upload_document(
     )
 
 
-@router.get("/documents/uploads", response_model=List[UploadedFile])
-def list_uploads() -> List[UploadedFile]:
-    out: List[UploadedFile] = []
+@router.get("/documents/uploads", response_model=list[UploadedFile])
+def list_uploads() -> list[UploadedFile]:
+    out: list[UploadedFile] = []
     for p in sorted(UPLOAD_DIR.glob("*")):
         if p.is_file():
             out.append(
@@ -165,9 +162,7 @@ def list_uploads() -> List[UploadedFile]:
                     filename=p.name,
                     size=p.stat().st_size,
                     content_type=None,
-                    uploaded_at=datetime.fromtimestamp(
-                        p.stat().st_mtime, tz=timezone.utc
-                    ),
+                    uploaded_at=datetime.fromtimestamp(p.stat().st_mtime, tz=timezone.utc),
                 )
             )
     return out
@@ -186,9 +181,7 @@ def download_document(filename: str):
 
 
 @router.delete("/documents/delete/{filename}")
-def delete_document(
-    filename: str, user: dict = Depends(get_current_user)
-):  # noqa: B008
+def delete_document(filename: str, user: dict = Depends(get_current_user)):  # noqa: B008
     candidate = (UPLOAD_DIR / filename).resolve()
     try:
         candidate.relative_to(UPLOAD_DIR)
@@ -199,7 +192,5 @@ def delete_document(
     try:
         candidate.unlink()
     except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Nie udało się usunąć: {e}"
-        ) from None
+        raise HTTPException(status_code=500, detail=f"Nie udało się usunąć: {e}") from None
     return {"deleted": filename}
