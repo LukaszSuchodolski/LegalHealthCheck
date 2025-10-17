@@ -1,22 +1,37 @@
-const API_BASE = import.meta.env.VITE_API_BASE ?? "http://127.0.0.1:8000";
+// frontend/src/api/http.js
+const BASE = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
 
-function authHeaders() {
-  const t = localStorage.getItem("lhc_token");
-  return t ? { Authorization: `Bearer ${t}` } : {};
-}
+/** Niski poziom: jedno miejsce do fetchy */
+export async function request(path, { method = "GET", body, token } = {}) {
+  const headers = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
 
-export async function http(path, { method = "GET", headers = {}, body } = {}) {
-  const res = await fetch(`${API_BASE}${path}`, {
+  const res = await fetch(`${BASE}${path}`, {
     method,
-    headers: { ...headers, ...authHeaders() },
-    body,
+    headers,
+    body: body ? JSON.stringify(body) : undefined,
   });
-  // gdy JSON
-  const ct = res.headers.get("content-type") || "";
-  const maybeJson = ct.includes("application/json");
+
+  if (res.status === 204) return null;
+
+  const data = await res.json().catch(() => null);
   if (!res.ok) {
-    const errText = maybeJson ? JSON.stringify(await res.json()).slice(0, 200) : await res.text();
-    throw new Error(`${res.status} ${res.statusText} ${errText}`);
+    const err = new Error("HTTP error");
+    err.status = res.status;
+    err.data = data;
+    throw err;
   }
-  return maybeJson ? res.json() : res;
+  return data;
 }
+
+/** Wysoki poziom: wygodne metody */
+const http = {
+  get: (path, opts = {}) => request(path, { ...opts, method: "GET" }),
+  post: (path, body, opts = {}) =>
+    request(path, { ...opts, method: "POST", body }),
+  put: (path, body, opts = {}) =>
+    request(path, { ...opts, method: "PUT", body }),
+  delete: (path, opts = {}) => request(path, { ...opts, method: "DELETE" }),
+};
+
+export default http; // ⬅️ eksport domyślny

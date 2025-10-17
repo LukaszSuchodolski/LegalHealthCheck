@@ -14,6 +14,8 @@ export async function uploadDocument(file) {
   return data; // { filename, size, ... }
 }
 export async function deleteDocument(filename) {
-  const { data } = await http.delete(`/api/v1/documents/delete/${encodeURIComponent(filename)}`);
+  const { data } = await http.delete(
+    `/api/v1/documents/delete/${encodeURIComponent(filename)}`,
+  );
   return data; // { deleted }
 }

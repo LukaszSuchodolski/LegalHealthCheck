@@ -1,6 +1,6 @@
 import os
 from datetime import UTC, datetime, timedelta
-from typing import Optional
+from typing import Annotated
 
 import bcrypt
 from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
@@ -17,17 +17,21 @@ JWT_SECRET = os.getenv("JWT_SECRET", "change-me-please")
 JWT_ALG = os.getenv("JWT_ALG", "HS256")
 JWT_EXPIRE_MIN = int(os.getenv("JWT_EXPIRE_MIN", "60"))
 
+
 # --- Schematy ---
 class LoginRequest(BaseModel):
     email: str
     password: str
 
+
 class LoginResponse(BaseModel):
     access_token: str
+
 
 class MeResponse(BaseModel):
     sub: str
     role: str
+
 
 # --- JWT helpers ---
 def _make_jwt(uid: str, role: str) -> str:
@@ -40,7 +44,8 @@ def _make_jwt(uid: str, role: str) -> str:
     }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALG)
 
-def _decode_from_header(authorization: Optional[str]) -> dict | None:
+
+def _decode_from_header(authorization: str | None) -> dict | None:
     if not authorization or not authorization.startswith("Bearer "):
         return None
     token = authorization.split(" ", 1)[1].strip()
@@ -48,6 +53,7 @@ def _decode_from_header(authorization: Optional[str]) -> dict | None:
         return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALG])
     except JWTError:
         return None
+
 
 # --- /auth/login (bcrypt) ---
 @router.post("/auth/login", response_model=LoginResponse)
@@ -67,6 +73,7 @@ async def login(payload: LoginRequest, request: Request):
     token = _make_jwt(uid, role)
     return LoginResponse(access_token=token)
 
+
 # --- /auth/me (sprawdzenie tokenu) ---
 @router.get("/auth/me", response_model=MeResponse)
 def me(authorization: str | None = Header(default=None)):
@@ -75,17 +82,21 @@ def me(authorization: str | None = Header(default=None)):
         raise HTTPException(status_code=401, detail="Not authenticated")
     return MeResponse(sub=payload.get("sub", "unknown"), role=payload.get("role", "user"))
 
+
 # --- Dependency do ochrony endpointów ---
 _security = HTTPBearer(auto_error=False)
 
-def get_current_user(creds: HTTPAuthorizationCredentials = Depends(_security)):  # noqa: B008
+
+def get_current_user(
+    creds: Annotated[HTTPAuthorizationCredentials | None, Depends(_security)],
+):
     if not creds:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     token = creds.credentials
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALG])
     except JWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token") from None
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+        ) from None
     return {"sub": payload.get("sub", "anonymous"), "role": payload.get("role", "user")}
-
-

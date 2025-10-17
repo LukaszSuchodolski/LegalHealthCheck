@@ -5,8 +5,8 @@ import Loader from "../components/Loader";
 
 export default function Alerts() {
   const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState("");
-  const [alerts, setAlerts]   = useState([]);
+  const [error, setError] = useState("");
+  const [alerts, setAlerts] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -25,17 +25,23 @@ export default function Alerts() {
   }, []);
 
   if (loading) return <Loader label="Ładowanie alertów..." />;
-  if (error)   return <div style={{ color: "crimson", padding: 24 }}>{error}</div>;
+  if (error)
+    return <div style={{ color: "crimson", padding: 24 }}>{error}</div>;
 
   return (
     <div className="max-w-4xl mx-auto space-y-4">
-      <h2 className="text-2xl font-semibold text-slate-900">Alerty regulacyjne</h2>
+      <h2 className="text-2xl font-semibold text-slate-900">
+        Alerty regulacyjne
+      </h2>
       {alerts.length === 0 ? (
         <p className="text-slate-600">Brak alertów.</p>
       ) : (
         <ul className="space-y-3">
           {alerts.map((a) => (
-            <li key={a.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <li
+              key={a.id}
+              className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <strong className="block text-slate-900">{a.title}</strong>
@@ -46,8 +52,8 @@ export default function Alerts() {
                     a.severity === "critical"
                       ? "bg-red-100 text-red-800"
                       : a.severity === "warning"
-                      ? "bg-amber-100 text-amber-800"
-                      : "bg-slate-100 text-slate-700"
+                        ? "bg-amber-100 text-amber-800"
+                        : "bg-slate-100 text-slate-700"
                   }`}
                 >
                   {a.severity}
@@ -64,4 +70,3 @@ export default function Alerts() {
     </div>
   );
 }
-

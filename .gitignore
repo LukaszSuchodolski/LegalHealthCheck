@@ -34,3 +34,24 @@ data/generations.json
 # Env
 .env
 .env.local
+
+# node
+**/node_modules/
+**/dist/
+**/.vite/
+
+# env & secrets
+*.env
+**/.env
+
+# python/artefakty
+**/__pycache__/
+**/.pytest_cache/
+**/*.pyc
+.venv/
+.uv/
+
+# dane robocze
+data/**
+reports/**
+

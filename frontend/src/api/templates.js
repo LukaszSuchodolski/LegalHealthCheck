@@ -9,7 +9,7 @@ export async function generateDocument(docId, payload) {
   const res = await http.post(
     `/api/v1/documents/generate/${encodeURIComponent(docId)}`,
     payload,
-    { responseType: "blob" }
+    { responseType: "blob" },
   );
 
   // Spróbuj wyciągnąć nazwę z Content-Disposition
