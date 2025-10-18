@@ -19,7 +19,21 @@ function joinRelative(base, path) {
 export function url(path = "") {
   if (!path) return BASE;
   if (ABSOLUTE_PROTOCOL.test(path) || path.startsWith("//")) return path;
-  if (!BASE_IS_ABSOLUTE && path.startsWith("/")) return path;
+  if (!BASE_IS_ABSOLUTE && path.startsWith("/")) {
+    const normalizedBase = BASE.endsWith("/") ? BASE.slice(0, -1) : BASE;
+    if (!normalizedBase) return path;
+
+    const prefixedBase = normalizedBase.startsWith("/")
+      ? normalizedBase
+      : `/${normalizedBase}`;
+
+    if (path.startsWith(prefixedBase)) {
+      const nextChar = path.charAt(prefixedBase.length);
+      if (!nextChar || nextChar === "/" || nextChar === "?" || nextChar === "#") {
+        return path;
+      }
+    }
+  }
   if (BASE_IS_ABSOLUTE) return new URL(path, BASE).toString();
   return joinRelative(BASE, path);
 }
