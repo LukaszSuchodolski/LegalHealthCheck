@@ -19,6 +19,7 @@ function joinRelative(base, path) {
 export function url(path = "") {
   if (!path) return BASE;
   if (ABSOLUTE_PROTOCOL.test(path) || path.startsWith("//")) return path;
+  if (!BASE_IS_ABSOLUTE && path.startsWith("/")) return path;
   if (BASE_IS_ABSOLUTE) return new URL(path, BASE).toString();
   return joinRelative(BASE, path);
 }
