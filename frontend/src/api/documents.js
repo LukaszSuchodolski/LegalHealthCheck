@@ -8,9 +8,7 @@ export async function listUploads() {
 export async function uploadDocument(file) {
   const form = new FormData();
   form.append("file", file);
-  const { data } = await http.post("/api/v1/documents/upload", form, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const { data } = await http.post("/api/v1/documents/upload", form);
   return data; // { filename, size, ... }
 }
 export async function deleteDocument(filename) {
