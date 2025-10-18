@@ -1,11 +1,26 @@
 // frontend/src/api/http.js
 const BASE = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
 const ABSOLUTE_PROTOCOL = /^[a-zA-Z][a-zA-Z\d+.-]*:/;
+const BASE_IS_ABSOLUTE =
+  ABSOLUTE_PROTOCOL.test(BASE) || (typeof BASE === "string" && BASE.startsWith("//"));
+
+function joinRelative(base, path) {
+  if (!base) return path;
+  if (!path) return base;
+
+  const baseEndsWithSlash = base.endsWith("/");
+  const pathStartsWithSlash = path.startsWith("/");
+
+  if (baseEndsWithSlash && pathStartsWithSlash) return base + path.slice(1);
+  if (!baseEndsWithSlash && !pathStartsWithSlash) return `${base}/${path}`;
+  return base + path;
+}
 
 export function url(path = "") {
   if (!path) return BASE;
   if (ABSOLUTE_PROTOCOL.test(path) || path.startsWith("//")) return path;
-  return new URL(path, BASE).toString();
+  if (BASE_IS_ABSOLUTE) return new URL(path, BASE).toString();
+  return joinRelative(BASE, path);
 }
 
 /** Niski poziom: jedno miejsce do fetchy */
