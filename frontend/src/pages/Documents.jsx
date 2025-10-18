@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import http from "../api/http";
+import http, { url as buildUrl } from "../api/http";
 
 export default function Documents() {
   const [templates, setTemplates] = useState([]);
@@ -47,13 +47,13 @@ export default function Documents() {
 
   function downloadTemplate(id) {
     window.open(
-      http.url(`/api/v1/documents/templates/download/${id}`),
+      buildUrl(`/api/v1/documents/templates/download/${id}`),
       "_blank",
     );
   }
 
   function downloadUpload(name) {
-    window.open(http.url(`/api/v1/documents/download/${name}`), "_blank");
+    window.open(buildUrl(`/api/v1/documents/download/${name}`), "_blank");
   }
 
   async function removeUpload(name) {
