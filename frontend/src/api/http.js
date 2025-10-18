@@ -1,37 +1,56 @@
-// frontend/src/api/http.js
-const BASE = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
+import axios from "axios";
 
-/** Niski poziom: jedno miejsce do fetchy */
-export async function request(path, { method = "GET", body, token } = {}) {
-  const headers = { "Content-Type": "application/json" };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
+const API_BASE = import.meta.env.VITE_API_BASE ?? "http://127.0.0.1:8000";
 
-  const res = await fetch(`${BASE}${path}`, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-  });
-
-  if (res.status === 204) return null;
-
-  const data = await res.json().catch(() => null);
-  if (!res.ok) {
-    const err = new Error("HTTP error");
-    err.status = res.status;
-    err.data = data;
-    throw err;
+function safeStorageGet(key) {
+  if (typeof window === "undefined") {
+    return "";
   }
-  return data;
+  try {
+    const storage = window.localStorage;
+    if (!storage) {
+      return "";
+    }
+    const value = storage.getItem(key);
+    return value ?? "";
+  } catch (error) {
+    console.warn("Unable to read from localStorage", error);
+    return "";
+  }
 }
 
-/** Wysoki poziom: wygodne metody */
-const http = {
-  get: (path, opts = {}) => request(path, { ...opts, method: "GET" }),
-  post: (path, body, opts = {}) =>
-    request(path, { ...opts, method: "POST", body }),
-  put: (path, body, opts = {}) =>
-    request(path, { ...opts, method: "PUT", body }),
-  delete: (path, opts = {}) => request(path, { ...opts, method: "DELETE" }),
-};
+const http = axios.create({
+  baseURL: API_BASE,
+  headers: { Accept: "application/json" },
+});
 
-export default http; // ⬅️ eksport domyślny
+http.interceptors.request.use((config) => {
+  const token = safeStorageGet("lhc_token");
+  if (token) {
+    config.headers = { ...(config.headers ?? {}) };
+    if (!config.headers.Authorization) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  return config;
+});
+
+http.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response) {
+      const { status, statusText, data } = error.response;
+      const serialized =
+        data == null
+          ? ""
+          : typeof data === "string"
+          ? data
+          : JSON.stringify(data);
+      const snippet = serialized ? serialized.slice(0, 200) : "";
+      error.message = `${status} ${statusText}${snippet ? ` ${snippet}` : ""}`;
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default http;
