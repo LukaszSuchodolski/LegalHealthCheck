@@ -13,7 +13,3 @@
 *.pdf binary
 *.zip binary
 *.rar binary
-
-
-git add .gitattributes
-git commit -m "chore: enforce LF endings via .gitattributes"

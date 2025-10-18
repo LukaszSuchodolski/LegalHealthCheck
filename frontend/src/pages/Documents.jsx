@@ -11,8 +11,8 @@ export default function Documents() {
     setMsg("Ładowanie...");
     try {
       const [t, u] = await Promise.all([
-        http("/api/v1/documents/templates"),
-        http("/api/v1/documents/uploads"),
+        http.get("/api/v1/documents/templates"),
+        http.get("/api/v1/documents/uploads"),
       ]);
       setTemplates(t || []);
       setUploads(u || []);
@@ -34,7 +34,7 @@ export default function Documents() {
     try {
       const fd = new FormData();
       fd.append("file", file, file.name);
-      await http("/api/v1/documents/upload", { method: "POST", body: fd });
+      await http.post("/api/v1/documents/upload", fd);
       await loadAll();
       setMsg("OK – wysłano");
     } catch {
@@ -47,25 +47,20 @@ export default function Documents() {
 
   function downloadTemplate(id) {
     window.open(
-      `${import.meta.env.VITE_API_BASE}/api/v1/documents/templates/download/${id}`,
+      http.url(`/api/v1/documents/templates/download/${id}`),
       "_blank",
     );
   }
 
   function downloadUpload(name) {
-    window.open(
-      `${import.meta.env.VITE_API_BASE}/api/v1/documents/download/${name}`,
-      "_blank",
-    );
+    window.open(http.url(`/api/v1/documents/download/${name}`), "_blank");
   }
 
   async function removeUpload(name) {
     if (!confirm(`Usunąć ${name}?`)) return;
     setBusy(true);
     try {
-      await http(`/api/v1/documents/delete/${encodeURIComponent(name)}`, {
-        method: "DELETE",
-      });
+      await http.delete(`/api/v1/documents/delete/${encodeURIComponent(name)}`);
       await loadAll();
     } catch {
       setMsg("Błąd kasowania");
