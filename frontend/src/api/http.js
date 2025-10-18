@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = import.meta.env.VITE_API_BASE ?? "http://127.0.0.1:8000";
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
 
 function safeStorageGet(key) {
   if (typeof window === "undefined") {
@@ -25,13 +25,21 @@ const http = axios.create({
 });
 
 http.interceptors.request.use((config) => {
+  config.headers = { ...(config.headers ?? {}) };
+
   const token = safeStorageGet("lhc_token");
-  if (token) {
-    config.headers = { ...(config.headers ?? {}) };
-    if (!config.headers.Authorization) {
-      config.headers.Authorization = `Bearer ${token}`;
+  if (token && !config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  if (typeof FormData !== "undefined" && config.data instanceof FormData) {
+    for (const key of Object.keys(config.headers)) {
+      if (key.toLowerCase() === "content-type") {
+        delete config.headers[key];
+      }
     }
   }
+
   return config;
 });
 

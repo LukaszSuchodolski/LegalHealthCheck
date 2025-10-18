@@ -10,7 +10,7 @@ export default function Documents() {
   const [msg, setMsg] = useState("");
 
   const apiBase = useMemo(
-    () => http.defaults?.baseURL ?? import.meta.env.VITE_API_BASE ?? FALLBACK_API_BASE,
+    () => http.defaults?.baseURL ?? import.meta.env.VITE_API_URL ?? FALLBACK_API_BASE,
     []
   );
 
@@ -42,9 +42,7 @@ export default function Documents() {
     try {
       const fd = new FormData();
       fd.append("file", file, file.name);
-      await http.post("/api/v1/documents/upload", fd, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await http.post("/api/v1/documents/upload", fd);
       await loadAll();
       setMsg("OK – wysłano");
     } catch (e) {
