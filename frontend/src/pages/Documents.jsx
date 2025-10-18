@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import http from "../api/http";
+import { useEffect, useState } from "react";
+import http, { url as buildUrl } from "../api/http";
 
 const FALLBACK_API_BASE = "http://127.0.0.1:8000";
 
@@ -57,18 +57,13 @@ export default function Documents() {
 
   function downloadTemplate(id) {
     window.open(
-      http.url(`/api/v1/documents/templates/download/${id}`),
+      buildUrl(`/api/v1/documents/templates/download/${id}`),
       "_blank",
     );
   }
 
   function downloadUpload(name) {
-    window.open(http.url(`/api/v1/documents/download/${name}`), "_blank");
-    window.open(`${apiBase}/api/v1/documents/templates/download/${id}`, "_blank");
-  }
-
-  function downloadUpload(name) {
-    window.open(`${apiBase}/api/v1/documents/download/${name}`, "_blank");
+    window.open(buildUrl(`/api/v1/documents/download/${name}`), "_blank");
   }
 
   async function removeUpload(name) {
