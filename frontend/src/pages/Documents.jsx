@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import http from "../api/http";
+
+const FALLBACK_API_BASE = "http://127.0.0.1:8000";
 
 export default function Documents() {
   const [templates, setTemplates] = useState([]);
@@ -7,23 +9,30 @@ export default function Documents() {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
 
+  const apiBase = useMemo(
+    () => http.defaults?.baseURL ?? import.meta.env.VITE_API_URL ?? FALLBACK_API_BASE,
+    []
+  );
+
   async function loadAll() {
     setMsg("Ładowanie...");
     try {
       const [t, u] = await Promise.all([
+      const [templatesRes, uploadsRes] = await Promise.all([
         http.get("/api/v1/documents/templates"),
         http.get("/api/v1/documents/uploads"),
       ]);
-      setTemplates(t || []);
-      setUploads(u || []);
+      setTemplates(Array.isArray(templatesRes.data) ? templatesRes.data : []);
+      setUploads(Array.isArray(uploadsRes.data) ? uploadsRes.data : []);
       setMsg("");
     } catch (e) {
+      console.error(e);
       setMsg("Błąd ładowania");
     }
   }
 
   useEffect(() => {
-    loadAll();
+    void loadAll();
   }, []);
 
   async function onUpload(ev) {
@@ -37,7 +46,8 @@ export default function Documents() {
       await http.post("/api/v1/documents/upload", fd);
       await loadAll();
       setMsg("OK – wysłano");
-    } catch {
+    } catch (e) {
+      console.error(e);
       setMsg("Błąd uploadu");
     } finally {
       setBusy(false);
@@ -54,6 +64,11 @@ export default function Documents() {
 
   function downloadUpload(name) {
     window.open(http.url(`/api/v1/documents/download/${name}`), "_blank");
+    window.open(`${apiBase}/api/v1/documents/templates/download/${id}`, "_blank");
+  }
+
+  function downloadUpload(name) {
+    window.open(`${apiBase}/api/v1/documents/download/${name}`, "_blank");
   }
 
   async function removeUpload(name) {
@@ -62,7 +77,8 @@ export default function Documents() {
     try {
       await http.delete(`/api/v1/documents/delete/${encodeURIComponent(name)}`);
       await loadAll();
-    } catch {
+    } catch (e) {
+      console.error(e);
       setMsg("Błąd kasowania");
     } finally {
       setBusy(false);
@@ -151,16 +167,10 @@ export default function Documents() {
                 <td style={{ padding: 6 }}>{u.size}</td>
                 <td style={{ padding: 6 }}>{u.modified || u.uploaded_at}</td>
                 <td style={{ padding: 6, display: "flex", gap: 8 }}>
-                  <button
-                    onClick={() => downloadUpload(u.filename)}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <button onClick={() => downloadUpload(u.filename)} style={{ cursor: "pointer" }}>
                     Pobierz
                   </button>
-                  <button
-                    onClick={() => removeUpload(u.filename)}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <button onClick={() => removeUpload(u.filename)} style={{ cursor: "pointer" }}>
                     Usuń
                   </button>
                 </td>
