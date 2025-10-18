@@ -10,13 +10,14 @@ export default function Login() {
   const { loginOk } = useAuth();
   const nav = useNavigate();
 
-  async function submit(e){
-    e.preventDefault(); setErr(null);
-    try{
+  async function submit(e) {
+    e.preventDefault();
+    setErr(null);
+    try {
       const data = await login({ email, password });
       loginOk(data);
       nav("/dashboard");
-    }catch(e){
+    } catch (e) {
       setErr(e?.response?.data?.detail || e?.message || "Login failed");
     }
   }
@@ -25,12 +26,24 @@ export default function Login() {
     <div>
       <h1>Login</h1>
       <form onSubmit={submit}>
-        <div><input value={email} onChange={e=>setEmail(e.target.value)} placeholder="email" /></div>
-        <div><input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="password" /></div>
+        <div>
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="email"
+          />
+        </div>
+        <div>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="password"
+          />
+        </div>
         <button type="submit">Sign in</button>
       </form>
-      {err && <pre style={{color:"crimson"}}>{String(err)}</pre>}
+      {err && <pre style={{ color: "crimson" }}>{String(err)}</pre>}
     </div>
   );
 }
-

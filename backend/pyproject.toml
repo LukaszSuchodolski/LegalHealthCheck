@@ -1,14 +1,52 @@
-[tool.ruff]
-line-length = 120
-fix = true
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
 
-# Wykluczenia (ścieżki POSIX)
-extend-exclude = [
-  ""
+[project]
+name = "legalhealthcheck-backend"
+version = "0.1.0"
+description = "LegalHealthCheck backend – FastAPI + audit/checkup API"
+requires-python = ">=3.10"
+dependencies = [
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.30",
+  "python-jose[cryptography]>=3.3",
+  "passlib[bcrypt]>=1.7",
+  "bcrypt>=4.1",
+  "httpx>=0.27",
+  "pydantic>=2.6",
+  "python-multipart>=0.0.9",
 ]
 
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "pre-commit",
+  "ruff",
+  "black",
+  "isort",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+# --- formatting & lint config (added) ---
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+known_first_party = ["app"]
+combine_as_imports = true
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
 [tool.ruff.lint]
-extend-select = ["E", "F", "B"]
-
-# Tymczasowo wyciszone (zostaną przywrócone po refaktorze plików)
-
+# LINT only: bez 'I' (isort) -> unikamy dublowania z isort hookiem
+select = ["E","F","UP","B"]

@@ -3,7 +3,12 @@
 
 export default function Loader({ label = "Ładowanie...", size = 16 }) {
   return (
-    <div className="flex items-center gap-2 p-6" role="status" aria-live="polite" aria-busy="true">
+    <div
+      className="flex items-center gap-2 p-6"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+    >
       <span
         style={{
           width: size,
@@ -20,4 +25,3 @@ export default function Loader({ label = "Ładowanie...", size = 16 }) {
     </div>
   );
 }
-

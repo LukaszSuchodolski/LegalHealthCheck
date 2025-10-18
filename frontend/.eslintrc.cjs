@@ -10,7 +10,7 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:import/recommended"
+    "plugin:import/recommended",
   ],
   settings: {
     react: { version: "detect" },
@@ -24,12 +24,15 @@ module.exports = {
         ],
         extensions: [".js", ".jsx", ".ts", ".tsx"],
       },
-      node: { extensions: [".js", ".jsx", ".ts", ".tsx"] }
-    }
+      node: { extensions: [".js", ".jsx", ".ts", ".tsx"] },
+    },
   },
   rules: {
     "react/react-in-jsx-scope": "off",
-    "no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
-    "import/no-unresolved": "error"
-  }
+    "no-unused-vars": [
+      "error",
+      { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+    ],
+    "import/no-unresolved": "error",
+  },
 };

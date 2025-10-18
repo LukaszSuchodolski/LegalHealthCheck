@@ -1,14 +1,14 @@
 # ruff: noqa: B008
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List
 
-from fastapi import APIRouter, HTTPException, UploadFile, File, Depends
-from app.api.auth import get_current_user
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
+from app.api.auth import get_current_user
 from app.core.files import DATA_DIR  # C:\LegalHealthCheck_clean\data
+
 
 class DocumentTemplate(BaseModel):
     id: str
@@ -16,11 +16,13 @@ class DocumentTemplate(BaseModel):
     category: str
     status: str  # ok | missing | update_required
 
+
 class UploadedFile(BaseModel):
     filename: str
     size: int
     content_type: str | None = None
     uploaded_at: datetime
+
 
 router = APIRouter(prefix="/api/v1", tags=["documents"])
 
@@ -30,7 +32,7 @@ TEMPLATES_DIR = DATA_PATH / "templates"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 TEMPLATES_DIR.mkdir(parents=True, exist_ok=True)
 
-MOCK_DOCS: List[DocumentTemplate] = [
+MOCK_DOCS: list[DocumentTemplate] = [
     DocumentTemplate(
         id="regulamin_sklepu",
         title="Regulamin sklepu internetowego",
@@ -51,9 +53,11 @@ MOCK_DOCS: List[DocumentTemplate] = [
     ),
 ]
 
-@router.get("/documents/templates", response_model=List[DocumentTemplate])
-def list_document_templates() -> List[DocumentTemplate]:
+
+@router.get("/documents/templates", response_model=list[DocumentTemplate])
+def list_document_templates() -> list[DocumentTemplate]:
     return MOCK_DOCS
+
 
 @router.get("/documents/templates/download/{doc_id}")
 def download_template(doc_id: str):
@@ -66,6 +70,7 @@ def download_template(doc_id: str):
         if candidate.is_file():
             return FileResponse(candidate, filename=candidate.name)
     raise HTTPException(status_code=404, detail="Template not found")
+
 
 @router.get("/documents/templates/raw/{doc_id}")
 def raw_template_info(doc_id: str):
@@ -80,7 +85,10 @@ def raw_template_info(doc_id: str):
             chosen = candidate
             break
     if not chosen:
-        return {"found": False, "tried": [f"{doc_id}{e}" for e in [".docx", ".pdf", ".txt"]]}
+        return {
+            "found": False,
+            "tried": [f"{doc_id}{e}" for e in [".docx", ".pdf", ".txt"]],
+        }
     info = {
         "found": True,
         "path": str(chosen),
@@ -91,6 +99,7 @@ def raw_template_info(doc_id: str):
     if chosen.suffix.lower() == ".txt":
         info["preview"] = chosen.read_text(encoding="utf-8", errors="ignore")
     return info
+
 
 @router.post("/documents/generate/{doc_id}")
 async def generate_document(doc_id: str, payload: dict):
@@ -113,8 +122,11 @@ async def generate_document(doc_id: str, payload: dict):
 
     return FileResponse(out_path, media_type="text/plain", filename=out_name)
 
+
 @router.post("/documents/upload", response_model=UploadedFile)
-async def upload_document(file: UploadFile = File(...), user: dict = Depends(get_current_user)) -> UploadedFile:  # noqa: B008
+async def upload_document(
+    file: UploadFile = File(...), user: dict = Depends(get_current_user)
+) -> UploadedFile:  # noqa: B008
     original_name = Path(file.filename or "uploaded.bin").name.replace(" ", "_")
     ts = datetime.now(tz=timezone.utc).strftime("%Y%m%dT%H%M%S")
     safe_name = f"{ts}__{original_name}"
@@ -139,9 +151,10 @@ async def upload_document(file: UploadFile = File(...), user: dict = Depends(get
         uploaded_at=datetime.now(tz=timezone.utc),
     )
 
-@router.get("/documents/uploads", response_model=List[UploadedFile])
-def list_uploads() -> List[UploadedFile]:
-    out: List[UploadedFile] = []
+
+@router.get("/documents/uploads", response_model=list[UploadedFile])
+def list_uploads() -> list[UploadedFile]:
+    out: list[UploadedFile] = []
     for p in sorted(UPLOAD_DIR.glob("*")):
         if p.is_file():
             out.append(
@@ -154,6 +167,7 @@ def list_uploads() -> List[UploadedFile]:
             )
     return out
 
+
 @router.get("/documents/download/{filename}")
 def download_document(filename: str):
     candidate = (UPLOAD_DIR / filename).resolve()
@@ -165,8 +179,9 @@ def download_document(filename: str):
         raise HTTPException(status_code=404, detail="File not found")
     return FileResponse(candidate, filename=candidate.name)
 
+
 @router.delete("/documents/delete/{filename}")
-def delete_document(filename: str, user: dict = Depends(get_current_user)) :  # noqa: B008
+def delete_document(filename: str, user: dict = Depends(get_current_user)):  # noqa: B008
     candidate = (UPLOAD_DIR / filename).resolve()
     try:
         candidate.relative_to(UPLOAD_DIR)
@@ -179,10 +194,3 @@ def delete_document(filename: str, user: dict = Depends(get_current_user)) :  # 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Nie udało się usunąć: {e}") from None
     return {"deleted": filename}
-
-
-
-
-
-
-

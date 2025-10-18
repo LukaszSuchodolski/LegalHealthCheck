@@ -14,7 +14,9 @@ export default function Checkup() {
       .then((d) => {
         setQuestions(d.questions || []);
         // zainicjalizuj odpowiedzi na false
-        const init = Object.fromEntries((d.questions || []).map(q => [q.id, false]));
+        const init = Object.fromEntries(
+          (d.questions || []).map((q) => [q.id, false]),
+        );
         setAnswers(init);
       })
       .catch((e) => setErr(e?.message || "Error"))
@@ -41,15 +43,25 @@ export default function Checkup() {
       {questions.length === 0 ? (
         <p>Brak pytań.</p>
       ) : (
-        <form onSubmit={(e)=>{e.preventDefault(); submit();}}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            submit();
+          }}
+        >
           <ul style={{ listStyle: "none", padding: 0 }}>
-            {questions.map(q => (
+            {questions.map((q) => (
               <li key={q.id} style={{ marginBottom: 8 }}>
                 <label>
                   <input
                     type="checkbox"
                     checked={!!answers[q.id]}
-                    onChange={e => setAnswers(prev => ({ ...prev, [q.id]: e.target.checked }))}
+                    onChange={(e) =>
+                      setAnswers((prev) => ({
+                        ...prev,
+                        [q.id]: e.target.checked,
+                      }))
+                    }
                   />{" "}
                   {q.text} {q.weight > 1 ? `(waga ${q.weight})` : ""}
                 </label>
@@ -63,9 +75,13 @@ export default function Checkup() {
       {result && (
         <div style={{ marginTop: 16 }}>
           <h2>Wynik</h2>
-          <p><b>Score:</b> {result.score} / {result.max_score}</p>
+          <p>
+            <b>Score:</b> {result.score} / {result.max_score}
+          </p>
           <ul>
-            {result.recommendations.map((r, i) => <li key={i}>{r}</li>)}
+            {result.recommendations.map((r, i) => (
+              <li key={i}>{r}</li>
+            ))}
           </ul>
         </div>
       )}

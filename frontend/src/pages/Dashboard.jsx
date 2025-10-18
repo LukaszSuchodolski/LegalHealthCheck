@@ -6,7 +6,9 @@ export default function Dashboard() {
   const [err, setErr] = useState(null);
 
   useEffect(() => {
-    getMe().then(setMe).catch(e => setErr(e?.response?.data?.detail || e.message));
+    getMe()
+      .then(setMe)
+      .catch((e) => setErr(e?.response?.data?.detail || e.message));
   }, []);
 
   return (

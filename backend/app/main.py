@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.checkup import router as checkup_router
 from app.api.auth import router as auth_router
+from app.api.checkup import router as checkup_router
 from app.api.v1.endpoints.checkup_results import router as checkup_results_router
 from app.api.v1.endpoints.documents import router as documents_v1_router
+
 # (opcjonalnie) alerts jeśli masz ten plik:
 try:
     from app.api.v1.endpoints.alerts import router as alerts_router  # noqa: F401
@@ -24,9 +25,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
 
 # Podpinamy routery (każdy ma swój prefix, np. /api/v1/...)
 app.include_router(checkup_router)
@@ -41,11 +44,3 @@ app.include_router(checkup_results_router)
 
 
 app.include_router(checkup_results_router)
-
-
-
-
-
-
-
-

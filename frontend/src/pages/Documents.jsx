@@ -88,10 +88,18 @@ export default function Documents() {
         <table style={{ borderCollapse: "collapse", width: "100%" }}>
           <thead>
             <tr>
-              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>ID</th>
-              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>Tytuł</th>
-              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>Kategoria</th>
-              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>Status</th>
+              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>
+                ID
+              </th>
+              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>
+                Tytuł
+              </th>
+              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>
+                Kategoria
+              </th>
+              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>
+                Status
+              </th>
               <th style={{ borderBottom: "1px solid #ddd" }} />
             </tr>
           </thead>
@@ -103,7 +111,10 @@ export default function Documents() {
                 <td style={{ padding: 6 }}>{t.category}</td>
                 <td style={{ padding: 6 }}>{t.status}</td>
                 <td style={{ padding: 6 }}>
-                  <button onClick={() => downloadTemplate(t.id)} style={{ cursor: "pointer" }}>
+                  <button
+                    onClick={() => downloadTemplate(t.id)}
+                    style={{ cursor: "pointer" }}
+                  >
                     Pobierz
                   </button>
                 </td>
@@ -130,9 +141,15 @@ export default function Documents() {
         <table style={{ borderCollapse: "collapse", width: "100%" }}>
           <thead>
             <tr>
-              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>Plik</th>
-              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>Rozmiar</th>
-              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>Data</th>
+              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>
+                Plik
+              </th>
+              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>
+                Rozmiar
+              </th>
+              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>
+                Data
+              </th>
               <th style={{ borderBottom: "1px solid " }} />
             </tr>
           </thead>
