@@ -1,57 +1,52 @@
-# OS
+# OS / edytory
 .DS_Store
 Thumbs.db
+desktop.ini
+.vscode/
+.idea/
 
 # Python
 .venv/
+.uv/
 __pycache__/
+**/__pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.egg-info/
+.eggs/
 .pytest_cache/
 .ruff_cache/
+.mypy_cache/
+.tox/
+.hypothesis/
 
-# Node / frontend
-node_modules/
-dist/
-build/
+# Logi / coverage
 *.log
+.coverage
+coverage.xml
+htmlcov/
 
-# Tooling
-coverage/
-.nyc_output/
-.cache/
-*.coverage
+# Node / Frontend (Vite/React)
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+node_modules/.vite/
+.vite/
+*.tsbuildinfo
 
-# App data (lokalne uploady, generaty)
-data/uploads/
-data/generations.json
-
-# IDE/Editor
-.vscode/
-*.code-workspace
-
-# Env
+# Środowiska / sekrety
 .env
-.env.local
-
-# node
-**/node_modules/
-**/dist/
-**/.vite/
-
-# env & secrets
 *.env
 **/.env
+.env.*
+.envrc
 
-# python/artefakty
-**/__pycache__/
-**/.pytest_cache/
-**/*.pyc
-.venv/
-.uv/
-
-# dane robocze
+# Dane robocze (jeśli nie mają trafić do repo)
 data/**
 reports/**
 
+# Build/artefakty ogólne
+build/
+dist/

@@ -5,8 +5,8 @@ from app.api.auth import router as auth_router
 from app.api.checkup import router as checkup_router
 from app.api.v1.endpoints.checkup_results import router as checkup_results_router
 from app.api.v1.endpoints.documents import router as documents_v1_router
+from app.api.v1.endpoints.export import router as export_router  # <-- DODANE
 
-# (opcjonalnie) alerts jeśli masz ten plik:
 try:
     from app.api.v1.endpoints.alerts import router as alerts_router  # noqa: F401
 except Exception:
@@ -31,16 +31,11 @@ def health():
     return {"status": "ok"}
 
 
-# Podpinamy routery (każdy ma swój prefix, np. /api/v1/...)
+# Rejestracja routerów (po jednym razie)
 app.include_router(checkup_router)
 app.include_router(documents_v1_router)
 app.include_router(checkup_results_router)
 app.include_router(auth_router)
+app.include_router(export_router)  # <-- DODANE
 if alerts_router:
     app.include_router(alerts_router)
-
-
-app.include_router(checkup_results_router)
-
-
-app.include_router(checkup_results_router)
