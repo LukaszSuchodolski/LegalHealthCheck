@@ -1,19 +1,22 @@
-
+# --- Line endings: domyślnie LF ---
 * text=auto eol=lf
 
-# Windowsowe skrypty zostają w CRLF
-*.ps1 text eol=crlf
-*.cmd text eol=crlf
+# Windows skrypty mogą mieć CRLF
 *.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
 
-# Binaria
+# Pliki binarne
 *.png binary
 *.jpg binary
 *.jpeg binary
+*.gif binary
+*.ico binary
 *.pdf binary
 *.zip binary
 *.rar binary
 
-
-git add .gitattributes
-git commit -m "chore: enforce LF endings via .gitattributes"
+# Lock files (bez konwersji końcówek linii)
+package-lock.json -text
+yarn.lock -text
+pnpm-lock.yaml -text
